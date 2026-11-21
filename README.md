@@ -1,134 +1,72 @@
-# XTM Platform: Customer Success Playbook
+# xtm-csm-playbook
 
-A customer success playbook for Filigran's XTM Platform (OpenCTI, OpenAEV, OpenCRQ and XTM One), written to learn the suite from the customer's side: what they're trying to achieve, where they get stuck, and how to prove value at renewal.
+I'm applying for a Customer Success role at Filigran, so I set up OpenCTI and XTM One locally to see the platform from the customer's side, then wrote down how I'd onboard and grow an account on it.
 
-Built from Filigran's public docs and product pages, plus a hands-on lab running the official OpenCTI + XTM One stack locally (see [Lab notes](#lab-notes)).
+I'm not a threat intel analyst. My background is enterprise customer success and retention in B2B SaaS. This is me learning the product.
 
----
+## What I ran
 
-## The platform in one minute
+- The official [OpenCTI Docker stack](https://github.com/OpenCTI-Platform/docker) on Windows (Docker Desktop + WSL2 Ubuntu)
+- OpenCTI + XTM One, both Community Edition
+- MITRE ATT&CK connector (comes with the stack) + the CISA Known Exploited Vulnerabilities connector, which I added
+- [`setup-opencti.sh`](setup-opencti.sh) and [`docker-compose.override.yml`](docker-compose.override.yml) are here if you want to reproduce it
 
-| Module | What it does | The customer question it answers |
-|---|---|---|
-| **OpenCTI** | Threat intelligence platform. Stores knowledge as STIX 2.1 and pulls in feeds through connectors (MITRE ATT&CK, CISA KEV, ISACs, commercial feeds). | "Who is targeting us, and how?" |
-| **OpenAEV** | Adversarial exposure validation (evolved from OpenBAS). Turns threat intel into attack simulations and exercises. | "Would our defenses actually stop them?" |
-| **OpenCRQ** | Cyber risk quantification (coming soon). Combines business context, assets, threats and tested controls into a risk figure. | "What is this risk worth in money?" |
-| **XTM One** | Agentic AI layer that connects OpenCTI and OpenAEV into one workflow. Bring-your-own LLM, can run on-premises. | "How do we do all this without more headcount?" |
-
-**How it maps to CTEM** (Gartner's five stages, my read):
-
-- **Scoping and discovery:** OpenCTI (which threats matter to this business)
-- **Prioritization:** OpenCTI plus OpenCRQ (which exposures matter most, in business terms)
-- **Validation:** OpenAEV (do our controls hold up)
-- **Mobilization:** XTM One (automating the handoffs between the steps)
-
----
-
-## Customer journey and success plan
-
-| Phase | Timing | What I'd do | Success signal |
-|---|---|---|---|
-| **Kickoff** | Week 0–1 | Map stakeholders (CISO or exec sponsor, CTI lead, SOC manager, platform owner). Agree 2–3 business objectives and written success criteria. Confirm SaaS vs self-hosted. | Signed-off success plan with a named exec sponsor |
-| **Onboarding** | Weeks 1–4 | Work with the Platform Architect on sizing and deployment. Connect the first feeds (ATT&CK, CISA KEV, their existing sources). Set up users, roles and TLP markings. Get one real workflow live. | First useful intel in the platform within 30 days |
-| **Adoption** | Months 2–3 | Train analysts, build leadership dashboards, connect downstream tools (SIEM, EDR, ticketing). Introduce automation playbooks. | Weekly active analysts growing; at least one downstream integration |
-| **Value and growth** | Quarterly | Run QBRs, document outcomes, spot expansion signals. | Exec sponsor attends QBRs; value documented in their terms |
-| **Renewal** | 90 days out | Build the business case from the documented outcomes, de-risk early. | Renewal with no surprises, ideally with expansion |
-
-### Expansion signals
-
-- Heavy OpenCTI use, and the board asks "are we protected against X?" → **OpenAEV**
-- The CISO needs to justify budget in money terms → **OpenCRQ**
-- Analysts are the bottleneck, too much manual enrichment and reporting → **XTM One**
-- More teams asking for access (SOC, vulnerability management, risk) → seat and scope expansion
-
----
-
-## Account health score
-
-| Signal | Why it matters | Red flag |
-|---|---|---|
-| Connector health and data freshness | No fresh data means no value | Connectors erroring or stale for over a week |
-| Weekly active analysts | Shows real daily use | Drop of 30%+ month over month |
-| Content created (reports, investigations, cases) | Shows the platform is part of their workflow | Flat or declining after onboarding |
-| Downstream integrations | Ties intel to action (SOC, vuln management) | None live after 60 days |
-| Exec engagement | Renewals are decided above the analysts | Sponsor skipped the last QBR, or left the company |
-| Support ticket trend | Spots friction early | The same issue keeps coming back |
-| Version currency (self-hosted) | Old versions mean missed value and more bugs | Several major releases behind |
-
----
-
-## QBR structure
-
-1. **Goals recap:** what we agreed to achieve and where we stand
-2. **Their threat landscape:** what changed this quarter for their sector and region (active intrusion sets, newly exploited CVEs)
-3. **Adoption:** usage, connectors, integrations, health score trend
-4. **Value delivered, in business terms:** analyst hours saved, time from new intel to detection, exposures validated and fixed
-5. **What's new:** roadmap items relevant to their goals
-6. **Next quarter:** success plan updates, owners and dates
-
-### Example value calculation (illustrative)
-
-> 4 analysts × 6 hours/week saved on manual feed collection and enrichment × €60/hour loaded cost × 48 weeks = **~€69,000/year** in analyst time.
-
-The assumptions are made up for illustration. In a real account, every number comes from the customer and gets agreed with them, so the business case holds up when their CFO looks at it.
-
----
-
-## Common risks and how I'd handle them
-
-- **Self-hosted stack sized too small:** the platform runs slowly and the customer blames the product. → Sizing review with the Platform Architect before go-live.
-- **"Data swamp":** too many feeds, nothing prioritized. → Start from their priority intelligence requirements and add feeds that serve them.
-- **Single champion:** the account is at risk if they leave. → Build relationships with several people from kickoff (sponsor, CTI lead, SOC).
-- **Seen as the CTI team's tool:** hard to justify at renewal. → Tie usage to SOC and vulnerability management outcomes early.
-- **"Why pay when it's open source?":** → Make the value of enterprise features, support and expertise visible in every QBR.
-
----
-
-## Lab notes
-
-I ran the official [OpenCTI Docker stack](https://github.com/OpenCTI-Platform/docker) locally on Windows (Docker Desktop + WSL2 Ubuntu): OpenCTI and XTM One, both Community Edition, with the default MITRE ATT&CK connector plus the CISA Known Exploited Vulnerabilities connector I added. The setup script and compose override are in this repo ([`setup-opencti.sh`](setup-opencti.sh), [`docker-compose.override.yml`](docker-compose.override.yml)).
-
-### What came in during the first hour
-
-- 17 integrations deployed, 3 workers, ~487K documents processed
-- 189 intrusion sets, 746 malware, 1.31K attack patterns, 1.79K vulnerabilities
+Shortly after it booted: 17 integrations, 3 workers, ~487K documents processed, 189 intrusion sets, 746 malware, ~1.3K attack patterns, ~1.8K vulnerabilities.
 
 ![Home dashboard](screenshots/01-home.png)
-![Integrations](screenshots/02-integrations.png)
 
-I looked up APT28 and Sandworm Team first. Both are attributed to Russia's GRU and both have targeted Georgia, where I'm based, so that's the threat landscape I'd care about as a customer here.
+The first thing I looked up was APT28 and Sandworm. Both are attributed to Russia's GRU and both have gone after Georgia, which is where I live.
 
 ![APT28 search](screenshots/05-apt28-search.png)
 
-More: [attack patterns](screenshots/03-attack-patterns.png) · [intrusion sets](screenshots/04-intrusion-sets.png) · [vulnerabilities](screenshots/06-vulnerabilities.png) · [XTM One](screenshots/07-xtm-one.png)
+## Stuff that tripped me up
 
-### Onboarding friction log: what a new customer would trip over
+**1. Docker on Windows took more fiddling than OpenCTI itself.** WSL integration was off in Docker Desktop, then I got permission denied on the docker socket, and Elasticsearch needs `vm.max_map_count` raised first (on Windows that means editing `.wslconfig`). None of the error messages tell you the fix. A self-hosted customer would hit the same wall before they ever see the UI, so I'd send a prerequisites checklist before kickoff.
 
-1. **Prerequisites before the platform even boots.** On Windows: WSL2, the Docker Desktop WSL integration toggle, docker group permissions, and raising `vm.max_map_count` for Elasticsearch through `.wslconfig`. Each one is a hard stop with an error message that doesn't point at the fix.
-   → *CSM move:* send a pre-flight checklist before kickoff, and for self-hosted customers, hold a short prerequisites and sizing call with the Platform Architect.
+**2. My own script broke the CISA connector.** `.env.sample` doesn't end with a newline, so the connector ID I appended got glued onto the last line. Everything else looked healthy, but the CISA connector was stuck in a restart loop. I caught it from the compose warning (`CONNECTOR_CISA_ID variable is not set`) and `docker compose ps`. Takeaway: "the platform is up" doesn't mean "the data is flowing". Check connectors first.
 
-2. **A connector failed quietly.** My setup script added the CISA connector's ID to `.env`, but the sample file has no trailing newline, so the value got stuck onto the previous line. The stack came up "fine", but the CISA connector sat in a restart loop. I caught it from the compose warning (`CONNECTOR_CISA_ID variable is not set`) and the `Restarting` status in `docker compose ps`.
-   → *Lesson:* "the platform is up" doesn't mean "the data is flowing". Check connector health first in every onboarding.
+**3. "9 integrations are degraded: User is not a service account."** By default every connector runs on the admin token. It all still works, but every imported object shows `admin` as the creator, so you can't tell which feed created what. In production I'd want one service account per connector from day one.
 
-3. **"9 integrations are degraded: User is not a service account."** The default stack runs every connector on the admin token. Everything works, but every imported object shows `admin` as its creator, so you can't tell which source created what.
-   → *Production:* give each connector its own service account. It's much easier to set up on day one than to untangle later, so it belongs on the onboarding checklist.
+![Integrations](screenshots/02-integrations.png)
 
-4. **Data isn't value yet.** MITRE fills in the "who and how" (actors, techniques, malware), but the home dashboard still shows **0 reports, 0 indicators** and "Most targeted victims: No data found." Targeted countries and sectors are blank on the intrusion set cards, and the KEV CVEs have no CVSS severity.
-   → *What this means for a customer:* time to first value depends on which feeds they connect. They need an indicator feed (an ISAC or OTX) for detections, an enrichment source for severity, and their own reports. That's the week-2 onboarding conversation, driven by their PIRs (the platform has a dedicated PIR section for this).
+**4. Lots of data, not much value yet.** The home dashboard shows 0 reports, 0 indicators and "Most targeted victims: No data found". Targeted countries are blank on the actor cards, and the KEV CVEs have no CVSS severity. MITRE + KEV tell you who the attackers are and how they work, but not what to block. A real customer needs an indicator feed, some enrichment and their own reports, and which ones depends on what they actually care about. There's a whole PIR (priority intelligence requirements) section in the sidebar for this, which is where I'd start the week-2 conversation.
 
-### Community vs Enterprise: what I saw
+**5. Community vs Enterprise.** The "Ask Ariane" AI assistant in OpenCTI is EE. XTM One CE connects to OpenCTI fine, but Chat, Value, Presentations and all of Agent Studio are locked. Value and Presentations sound like exactly the things a CSM would use for business reviews, so that's an obvious expansion conversation.
 
-- **OpenCTI CE:** the core platform, connectors, integrations view and dashboards all work. The "Ask Ariane" AI assistant is marked EE.
-- **XTM One CE:** connects to OpenCTI out of the box. Operations and Files are open. Chat, Value, Presentations and all of Agent Studio (Knowledge, Prompts, Templates, Skills) are locked behind Enterprise.
-  → *CSM angle:* judging by the names, Value and Presentations sit right where QBR and ROI work happens. For a customer already building value reports by hand, that's a natural expansion conversation.
+More screenshots: [attack patterns](screenshots/03-attack-patterns.png) · [intrusion sets](screenshots/04-intrusion-sets.png) · [vulnerabilities](screenshots/06-vulnerabilities.png) · [XTM One](screenshots/07-xtm-one.png)
 
----
+## How I'd run an account on this
 
-## Sources
+My understanding of the suite so far:
 
-- [OpenCTI documentation](https://docs.opencti.io/latest/)
-- [OpenCTI Docker deployment](https://github.com/OpenCTI-Platform/docker)
-- [XTM One](https://filigran.io/platform/xtm-one/)
-- [OpenCRQ](https://filigran.io/products/opencrq)
-- [MITRE ATT&CK](https://attack.mitre.org/)
-- [CISA Known Exploited Vulnerabilities](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
+- **OpenCTI:** threat intel platform; everything is stored as STIX 2.1
+- **OpenAEV:** attack simulations based on that intel (used to be OpenBAS)
+- **OpenCRQ:** cyber risk quantification, not released yet
+- **XTM One:** the AI agent layer that ties them together
+
+**First 30 days**
+- Figure out who actually matters: the exec sponsor (usually the CISO), the CTI lead, the SOC lead, and whoever owns the servers
+- Agree on 2–3 goals in writing, e.g. "cut the time from a new threat to a detection rule"
+- Prerequisites and sizing check before install (see #1)
+- Connectors healthy, service accounts set up, one real workflow live
+- Aim for something genuinely useful in the platform within the first month
+
+**Health signals I'd watch**
+- Connectors erroring or data going stale
+- Weekly active analysts dropping
+- No SIEM/EDR integration after a couple of months
+- The sponsor stops showing up to reviews
+- Self-hosted and several versions behind
+
+**Business reviews:** recap the goals, what changed in their threat landscape, usage, value in *their* numbers (analyst hours saved, time to detection, exposures fixed), what's new on the roadmap, and next quarter's plan. The value numbers come from the customer, not from me, or they won't survive a CFO.
+
+**When to bring up another module**
+- Heavy CTI use + the board asking "are we covered against X?" → OpenAEV
+- The CISO has to justify budget in money → OpenCRQ
+- Analysts drowning in manual enrichment and reporting → XTM One
+
+**Things I'd worry about:** one champion who might leave (so build several relationships early), "why pay when it's open source?" (so make enterprise value visible in every review), and connecting every feed at once until nobody can find anything useful.
+
+## Links
+
+[OpenCTI docs](https://docs.opencti.io/latest/) · [Docker stack](https://github.com/OpenCTI-Platform/docker) · [XTM One](https://filigran.io/platform/xtm-one/) · [OpenCRQ](https://filigran.io/products/opencrq) · [MITRE ATT&CK](https://attack.mitre.org/) · [CISA KEV](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
